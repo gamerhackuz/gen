@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sana Farqi</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #0b1120; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; color: white; }
+        .card { background: #1e293b; padding: 25px; border-radius: 16px; width: 320px; text-align: center; }
+        h2 { color: #a78bfa; margin-bottom: 20px; }
+        .date-inputs { display: grid; gap: 12px; margin-bottom: 20px; text-align: left; }
+        label { font-size: 14px; color: #94a3b8; }
+        input { width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; margin-top: 5px; }
+        .result { background: #0f172a; padding: 15px; border-radius: 10px; font-size: 16px; line-height: 1.8; color: #cbd5e1; }
+        .result span { color: #a78bfa; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>📅 Sana Farqi</h2>
+        <div class="date-inputs">
+            <label>Boshlanish sanasi</label>
+            <input type="date" id="start">
+            <label>Tugash sanasi</label>
+            <input type="date" id="end">
+        </div>
+        <div class="result" id="res">Sana tanlang...</div>
+    </div>
+
+    <script>
+        const startInput = document.getElementById('start');
+        const endInput = document.getElementById('end');
+        const result = document.getElementById('res');
+
+        function calculateDiff() {
+            if (!startInput.value || !endInput.value) return;
+
+            let start = new Date(startInput.value);
+            let end = new Date(endInput.value);
+
+            if (end < start) [start, end] = [end, start];
+
+            let years = end.getFullYear() - start.getFullYear();
+            let months = end.getMonth() - start.getMonth();
+            let days = end.getDate() - start.getDate();
+
+            if (days < 0) {
+                months--;
+                const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            const totalDays = Math.floor((end - start) / (1000 * 60 * 60 * 24));
+            const totalWeeks = Math.floor(totalDays / 7);
+
+            result.innerHTML = `
+                <span>${years}</span> yil, <span>${months}</span> oy, <span>${days}</span> kun<br>
+                Jami: <span>${totalDays}</span> kun yoki <span>${totalWeeks}</span> hafta
+            `;
+        }
+
+        startInput.valueAsDate = new Date();
+        endInput.valueAsDate = new Date();
+        endInput.valueAsDate.setDate(endInput.valueAsDate.getDate() + 100);
+        [startInput, endInput].forEach(el => el.addEventListener('change', calculateDiff));
+        calculateDiff();
+    </script>
+</body>
+</html>
